@@ -1,0 +1,125 @@
+<% 
+  const content = `
+    <h2 style="margin-bottom: 30px; color: #2d3748;">🔍 Search Your Journal</h2>
+    
+    <form action="/search" method="GET" class="search-box">
+        <input 
+            type="text" 
+            name="q" 
+            placeholder="Search titles, content, or activities..." 
+            value="<%= query || '' %>"
+            style="padding: 15px; font-size: 16px; border-radius: 10px;"
+        >
+        <button type="submit" class="btn">Search</button>
+    </form>
+
+    <% if (query) { %>
+        <div style="margin-bottom: 20px; color: #4a5568;">
+            <% if (entries.length === 0) { %>
+                <p>No entries found for "<strong><%= query %></strong>"</p>
+                <p style="margin-top: 10px; color: #718096;">
+                    Try searching for different keywords or 
+                    <a href="/search" style="color: #667eea;">clear your search</a>
+                </p>
+            <% } else { %>
+                <p>Found <%= entries.length %> result<%= entries.length !== 1 ? 's' : '' %> for "<strong><%= query %></strong>"</p>
+            <% } %>
+        </div>
+
+        <% if (entries.length > 0) { %>
+            <div class="entries-grid">
+                <% entries.forEach(entry => { %>
+                    <div class="entry-card" style="
+                        background: #f7fafc;
+                        border: 1px solid #e2e8f0;
+                        border-radius: 12px;
+                        padding: 24px;
+                        margin-bottom: 20px;
+                        transition: transform 0.2s ease, box-shadow 0.2s ease;
+                    " 
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                            <h3 style="color: #2d3748; margin: 0; font-size: 1.3em;">
+                                <a href="/entry/<%= entry.id %>" style="text-decoration: none; color: inherit;">
+                                    <%= entry.title %>
+                                </a>
+                            </h3>
+                            <div style="display: flex; gap: 8px;">
+                                <% if (entry.mood) { %>
+                                    <span style="
+                                        background: <%= entry.mood === 'happy' ? '#c6f6d5' : entry.mood === 'sad' ? '#fed7d7' : entry.mood === 'excited' ? '#fef5e7' : entry.mood === 'angry' ? '#fed7d7' : entry.mood === 'calm' ? '#e6fffa' : '#e2e8f0' %>;
+                                        color: <%= entry.mood === 'happy' ? '#22543d' : entry.mood === 'sad' ? '#742a2a' : entry.mood === 'excited' ? '#744210' : entry.mood === 'angry' ? '#742a2a' : entry.mood === 'calm' ? '#234e52' : '#4a5568' %>;
+                                        padding: 4px 12px;
+                                        border-radius: 15px;
+                                        font-size: 0.85em;
+                                        font-weight: 500;
+                                    ">
+                                        <%= entry.mood === 'happy' ? '😊' : entry.mood === 'sad' ? '😢' : entry.mood === 'excited' ? '🤩' : entry.mood === 'angry' ? '😠' : entry.mood === 'calm' ? '😌' : '😐' %> 
+                                        <%= entry.mood %>
+                                    </span>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <div style="color: #4a5568; margin-bottom: 15px; font-size: 0.9em;">
+                            📅 <%= formatDate(entry.date) %>
+                        </div>
+
+                        <p style="color: #718096; line-height: 1.6; margin-bottom: 15px;">
+                            <%= entry.content.substring(0, 200) %><%- entry.content.length > 200 ? '...' : '' %>
+                        </p>
+
+                        <% if (entry.activities && entry.activities.length > 0) { %>
+                            <div style="margin-bottom: 15px;">
+                                <div style="font-size: 0.85em; color: #4a5568; margin-bottom: 8px; font-weight: 500;">Activities:</div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                    <% entry.activities.forEach(activity => { %>
+                                        <span style="
+                                            background: #edf2f7;
+                                            color: #4a5568;
+                                            padding: 4px 8px;
+                                            border-radius: 6px;
+                                            font-size: 0.8em;
+                                        ">
+                                            🏷️ <%= activity %>
+                                        </span>
+                                    <% }); %>
+                                </div>
+                            </div>
+                        <% } %>
+
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <a href="/entry/<%= entry.id %>" class="btn" style="font-size: 14px; padding: 8px 16px;">Read More</a>
+                            <a href="/edit/<%= entry.id %>" class="btn btn-secondary" style="font-size: 14px; padding: 8px 16px;">Edit</a>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+    <% } else { %>
+        <div style="text-align: center; padding: 60px 20px; color: #718096;">
+            <div style="font-size: 4em; margin-bottom: 20px;">🔍</div>
+            <h3>Search Your Journal</h3>
+            <p style="margin: 15px 0; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Find specific entries by searching through titles, content, or activities. 
+                Use keywords to discover patterns in your daily life.
+            </p>
+            <div style="margin-top: 30px; color: #4a5568;">
+                <strong>Search tips:</strong><br>
+                • Search for activities like "exercise" or "work"<br>
+                • Look for mood-related terms<br>
+                • Find entries by date or specific events
+            </div>
+        </div>
+    <% } %>
+
+    <script>
+        // Focus search input on page load
+        document.querySelector('input[name="q"]').focus();
+    </script>
+  `;
+%>
+
+<%- include('layout', { content: content }) %>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Journal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .header h1 {
+            color: white;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: #e53e3e;
+        }
+
+        .btn-danger:hover {
+            background: #c53030;
+        }
+
+        .btn-secondary {
+            background: #718096;
+        }
+
+        .btn-secondary:hover {
+            background: #4a5568;
+        }
+
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 Daily Journal</h1>
+            <div class="nav">
+                <a href="/">Home</a>
+                <a href="/new">New Entry</a>
+                <a href="/search">Search</a>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2>Your Journal Entries</h2>
+                <a href="/new" class="btn">✏️ New Entry</a>
+            </div>
+
+            <% if (entries.length === 0) { %>
+                <div style="text-align: center; padding: 60px 20px; color: #718096;">
+                    <div style="font-size: 4em; margin-bottom: 20px;">📝</div>
+                    <h3>No entries yet!</h3>
+                    <p style="margin: 15px 0;">Start documenting your daily activities and thoughts.</p>
+                    <a href="/new" class="btn">Write Your First Entry</a>
+                </div>
+            <% } else { %>
+                <div class="entries-grid">
+                    <% entries.forEach(entry => { %>
+                        <div class="entry-card" style="
+                            background: #f7fafc;
+                            border: 1px solid #e2e8f0;
+                            border-radius: 12px;
+                            padding: 24px;
+                            margin-bottom: 20px;
+                            transition: transform 0.2s ease, box-shadow 0.2s ease;
+                        " 
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                                <h3 style="color: #2d3748; margin: 0; font-size: 1.3em;">
+                                    <a href="/entry/<%= entry.id %>" style="text-decoration: none; color: inherit;">
+                                        <%= entry.title %>
+                                    </a>
+                                </h3>
+                                <div style="display: flex; gap: 8px;">
+                                    <% if (entry.mood) { %>
+                                        <span style="
+                                            background: <%= entry.mood === 'happy' ? '#c6f6d5' : entry.mood === 'sad' ? '#fed7d7' : entry.mood === 'excited' ? '#fef5e7' : entry.mood === 'angry' ? '#fed7d7' : entry.mood === 'calm' ? '#e6fffa' : '#e2e8f0' %>;
+                                            color: <%= entry.mood === 'happy' ? '#22543d' : entry.mood === 'sad' ? '#742a2a' : entry.mood === 'excited' ? '#744210' : entry.mood === 'angry' ? '#742a2a' : entry.mood === 'calm' ? '#234e52' : '#4a5568' %>;
+                                            padding: 4px 12px;
+                                            border-radius: 15px;
+                                            font-size: 0.85em;
+                                            font-weight: 500;
+                                        ">
+                                            <%= entry.mood === 'happy' ? '😊' : entry.mood === 'sad' ? '😢' : entry.mood === 'excited' ? '🤩' : entry.mood === 'angry' ? '😠' : entry.mood === 'calm' ? '😌' : '😐' %> 
+                                            <%= entry.mood %>
+                                        </span>
+                                    <% } %>
+                                </div>
+                            </div>
+
+                            <div style="color: #4a5568; margin-bottom: 15px; font-size: 0.9em;">
+                                📅 <%= formatDate(entry.date) %>
+                            </div>
+
+                            <p style="color: #718096; line-height: 1.6; margin-bottom: 15px;">
+                                <%= entry.content.substring(0, 200) %><%- entry.content.length > 200 ? '...' : '' %>
+                            </p>
+
+                            <% if (entry.activities && entry.activities.length > 0) { %>
+                                <div style="margin-bottom: 15px;">
+                                    <div style="font-size: 0.85em; color: #4a5568; margin-bottom: 8px; font-weight: 500;">Activities:</div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                        <% entry.activities.forEach(activity => { %>
+                                            <span style="
+                                                background: #edf2f7;
+                                                color: #4a5568;
+                                                padding: 4px 8px;
+                                                border-radius: 6px;
+                                                font-size: 0.8em;
+                                            ">
+                                                🏷️ <%= activity %>
+                                            </span>
+                                        <% }); %>
+                                    </div>
+                                </div>
+                            <% } %>
+
+                            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                                <a href="/entry/<%= entry.id %>" class="btn" style="font-size: 14px; padding: 8px 16px;">Read More</a>
+                                <a href="/edit/<%= entry.id %>" class="btn btn-secondary" style="font-size: 14px; padding: 8px 16px;">Edit</a>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px; color: #718096;">
+                    <p>Total entries: <%= entries.length %></p>
+                </div>
+            <% } %>
+        </div>
+        
+        <div class="footer">
+            <p>Keep track of your daily activities and thoughts 🌟</p>
+        </div>
+    </div>
+</body>
+</html>

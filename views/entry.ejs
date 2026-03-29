@@ -1,0 +1,100 @@
+<% 
+  const content = `
+    <div style="max-width: 800px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <a href="/" class="btn btn-secondary">← Back to All Entries</a>
+            <div style="display: flex; gap: 10px;">
+                <a href="/edit/<%= entry.id %>" class="btn">✏️ Edit</a>
+                <form action="/delete/<%= entry.id %>" method="POST" style="display: inline;" 
+                      onsubmit="return confirm('Are you sure you want to delete this entry?')">
+                    <button type="submit" class="btn btn-danger">🗑️ Delete</button>
+                </form>
+            </div>
+        </div>
+
+        <article style="
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+        ">
+            <header style="margin-bottom: 30px; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px;">
+                <h1 style="color: #2d3748; margin-bottom: 15px; font-size: 2em;">
+                    <%= entry.title %>
+                </h1>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+                    <div style="color: #4a5568; font-size: 1.1em;">
+                        📅 <%= formatDate(entry.date) %>
+                    </div>
+                    
+                    <% if (entry.mood) { %>
+                        <span style="
+                            background: <%= entry.mood === 'happy' ? '#c6f6d5' : entry.mood === 'sad' ? '#fed7d7' : entry.mood === 'excited' ? '#fef5e7' : entry.mood === 'angry' ? '#fed7d7' : entry.mood === 'calm' ? '#e6fffa' : '#e2e8f0' %>;
+                            color: <%= entry.mood === 'happy' ? '#22543d' : entry.mood === 'sad' ? '#742a2a' : entry.mood === 'excited' ? '#744210' : entry.mood === 'angry' ? '#742a2a' : entry.mood === 'calm' ? '#234e52' : '#4a5568' %>;
+                            padding: 8px 16px;
+                            border-radius: 20px;
+                            font-weight: 500;
+                            font-size: 1.1em;
+                        ">
+                            <%= entry.mood === 'happy' ? '😊' : entry.mood === 'sad' ? '😢' : entry.mood === 'excited' ? '🤩' : entry.mood === 'angry' ? '😠' : entry.mood === 'calm' ? '😌' : '😐' %> 
+                            Feeling <%= entry.mood %>
+                        </span>
+                    <% } %>
+                </div>
+            </header>
+
+            <div style="margin-bottom: 30px;">
+                <div style="
+                    color: #2d3748;
+                    line-height: 1.8;
+                    font-size: 1.1em;
+                    white-space: pre-wrap;
+                "><%- entry.content.replace(/\\n/g, '<br>') %></div>
+            </div>
+
+            <% if (entry.activities && entry.activities.length > 0) { %>
+                <div style="
+                    background: white;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 8px;
+                    padding: 20px;
+                    margin-top: 20px;
+                ">
+                    <h3 style="color: #4a5568; margin-bottom: 15px; font-size: 1.1em;">
+                        🏷️ Activities from this day:
+                    </h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <% entry.activities.forEach(activity => { %>
+                            <span style="
+                                background: #edf2f7;
+                                color: #4a5568;
+                                padding: 6px 12px;
+                                border-radius: 8px;
+                                font-weight: 500;
+                            ">
+                                <%= activity %>
+                            </span>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+
+            <footer style="
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #e2e8f0;
+                color: #718096;
+                font-size: 0.9em;
+            ">
+                <div>Created: <%= new Date(entry.createdAt).toLocaleString() %></div>
+                <% if (entry.updatedAt) { %>
+                    <div>Last updated: <%= new Date(entry.updatedAt).toLocaleString() %></div>
+                <% } %>
+            </footer>
+        </article>
+    </div>
+  `;
+%>
+
+<%- include('layout', { content: content }) %>

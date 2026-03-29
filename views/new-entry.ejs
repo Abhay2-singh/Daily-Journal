@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Entry - Daily Journal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .header h1 {
+            color: white;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #718096;
+        }
+
+        .btn-secondary:hover {
+            background: #4a5568;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .error {
+            color: #e53e3e;
+            background: #fed7d7;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #feb2b2;
+        }
+
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 Daily Journal</h1>
+            <div class="nav">
+                <a href="/">Home</a>
+                <a href="/new">New Entry</a>
+                <a href="/search">Search</a>
+            </div>
+        </div>
+        
+        <div class="content">
+    <div style="max-width: 600px; margin: 0 auto;">
+        <h2 style="margin-bottom: 30px; color: #2d3748;">✏️ Write New Journal Entry</h2>
+        
+        <% if (typeof error !== 'undefined') { %>
+            <div class="error">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/new" method="POST">
+            <div class="form-group">
+                <label for="title">Entry Title *</label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    name="title" 
+                    required 
+                    placeholder="What happened today?"
+                    value="<%= typeof title !== 'undefined' ? title : '' %>"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="mood">How are you feeling?</label>
+                <select id="mood" name="mood">
+                    <option value="neutral" <%= typeof mood !== 'undefined' && mood === 'neutral' ? 'selected' : '' %>>😐 Neutral</option>
+                    <option value="happy" <%= typeof mood !== 'undefined' && mood === 'happy' ? 'selected' : '' %>>😊 Happy</option>
+                    <option value="sad" <%= typeof mood !== 'undefined' && mood === 'sad' ? 'selected' : '' %>>😢 Sad</option>
+                    <option value="excited" <%= typeof mood !== 'undefined' && mood === 'excited' ? 'selected' : '' %>>🤩 Excited</option>
+                    <option value="calm" <%= typeof mood !== 'undefined' && mood === 'calm' ? 'selected' : '' %>>😌 Calm</option>
+                    <option value="angry" <%= typeof mood !== 'undefined' && mood === 'angry' ? 'selected' : '' %>>😠 Angry</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="activities">Activities (comma separated)</label>
+                <input 
+                    type="text" 
+                    id="activities" 
+                    name="activities" 
+                    placeholder="work, exercise, reading, cooking..."
+                    value="<%= typeof activities !== 'undefined' ? activities : '' %>"
+                >
+                <small style="color: #718096; margin-top: 5px; display: block;">
+                    Separate multiple activities with commas
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="content">What happened today? *</label>
+                <textarea 
+                    id="content" 
+                    name="content" 
+                    required 
+                    placeholder="Describe your day, thoughts, experiences..."
+                    style="min-height: 200px;"
+                ><%= typeof content !== 'undefined' ? content : '' %></textarea>
+            </div>
+
+            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 30px;">
+                <a href="/" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn">💾 Save Entry</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Auto-resize textarea
+        const textarea = document.getElementById('content');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+
+        // Auto-save to localStorage (draft)
+        const form = document.querySelector('form');
+        const inputs = form.querySelectorAll('input, textarea, select');
+        
+        inputs.forEach(input => {
+            // Load saved values
+            const savedValue = localStorage.getItem('draft_' + input.name);
+            if (savedValue && !input.value) {
+                input.value = savedValue;
+            }
+            
+            // Save on input
+            input.addEventListener('input', function() {
+                localStorage.setItem('draft_' + this.name, this.value);
+            });
+        });
+
+        // Clear draft on successful submit
+        form.addEventListener('submit', function() {
+            inputs.forEach(input => {
+                localStorage.removeItem('draft_' + input.name);
+            });
+        });
+    </script>
+        </div>
+        
+        <div class="footer">
+            <p>Keep track of your daily activities and thoughts 🌟</p>
+        </div>
+    </div>
+</body>
+</html>
